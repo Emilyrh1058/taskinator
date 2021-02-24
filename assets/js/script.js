@@ -16,19 +16,15 @@ var createTaskHandler = function(event) {
 
     // CREATE DIV TO HOLD TASK INFO AND ADD TO LIST ITEM
     var taskInfoEl = document.createElement("div");
-
-    // GIVE IT A CLASS NAME
     taskInfoEl.className = "task-info";
 
     //ADD HTML CONTENT TO DIV
     taskInfoEl.innerHTML = "<h3 class='task-name'>" + taskNameInput + "</h3><span class='task-type'>" + taskTypeInput + "</span>";
-
     listItemEl.appendChild(taskInfoEl);
 
     // ADD ENTIRE LIST ITEM TO LIST
     tasksToDoEl.appendChild(listItemEl);
 
-    console.dir(listItemEl);
 };
 
 formEl.addEventListener("submit", createTaskHandler);
