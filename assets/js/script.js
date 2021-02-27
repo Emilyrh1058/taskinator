@@ -4,6 +4,8 @@ var tasksToDoEl = document.querySelector("#tasks-to-do");
 var tasksInProgressEl = document.querySelector("#tasks-in-progress");
 var tasksCompletedEl = document.querySelector("#tasks-completed");
 var pageContentEl = document.querySelector("#page-content");
+var tasks = [];
+
 
 var taskFormHandler = function (event) {
   event.preventDefault();
@@ -12,9 +14,9 @@ var taskFormHandler = function (event) {
   console.dir(taskNameInput);
 
   var taskTypeInput = document.querySelector("select[name='task-type']").value;
-  console.log(taskTypeInput);
+  console.log(taskTypeInput)
 
-  // CHECK IF INPUT VALUES ARE EMPTY STRINGS
+  // CHECK IF INPUT VALUES ARE EMPTY S;TRINGS
   if (!taskNameInput || !taskTypeInput) {
     alert("You need to fill out the task form!");
     return false;
@@ -29,27 +31,26 @@ var taskFormHandler = function (event) {
     var taskId = formEl.getAttribute("data-task-id");
     completeEditTask(taskNameInput, taskTypeInput, taskId);
   }
+  
   // no data attribute, so create object as normal and pass to createTaskEl function
   else {
     var taskDataObj = {
       name: taskNameInput,
       type: taskTypeInput,
+      status: "to do"
     };
 
     createTaskEl(taskDataObj);
   }
-
-  // PACKAGE UP DATA AS AN OBJECT
-  var taskDataObj = {
-    name: taskNameInput,
-    type: taskTypeInput,
-  };
-
 };
 
 var createTaskEl = function (taskDataObj) {
+  console.log(taskDataObj);
+  console.log(taskDataObj.status); 
+  
   var listItemEl = document.createElement("li");
   listItemEl.className = "task-item";
+
 
   // ADD TASK ID AS A CUSTOM ATTRIBUTE
   listItemEl.setAttribute("data-task-id", taskIdCounter);
@@ -57,12 +58,7 @@ var createTaskEl = function (taskDataObj) {
   // CREATE DIV TO HOLD TASK INFO AND ADD TO LIST ITEM
   var taskInfoEl = document.createElement("div");
   taskInfoEl.className = "task-info";
-  taskInfoEl.innerHTML =
-    "<h3 class='task-name'>" +
-    taskDataObj.name +
-    "</h3><span class='task-type'>" +
-    taskDataObj.type +
-    "</span>";
+  taskInfoEl.innerHTML ="<h3 class='task-name'>" + taskDataObj.name + "</h3><span class='task-type'>" + taskDataObj.type + "</span>";
   listItemEl.appendChild(taskInfoEl);
 
   var taskActionsEl = createTaskActions(taskIdCounter);
@@ -72,7 +68,10 @@ var createTaskEl = function (taskDataObj) {
   // ADD ENTIRE LIST ITEM TO LIST
   tasksToDoEl.appendChild(listItemEl);
 
-  // INCREASE TASK COUNTER FOR NEXT UNIQUE ID
+  taskDataObj.id = taskIdCounter;
+
+  tasks.push(taskDataObj);
+
   taskIdCounter++;
 };
 
@@ -123,6 +122,14 @@ var createTaskActions = function (taskId) {
     taskSelected.querySelector("h3.task-name").textContent = taskName;
     taskSelected.querySelector("span.task-type").textContent = taskType;
 
+    // loop through tasks array and task object with new content
+    for (var i = 0; i < tasks.length; i++) {
+      if (tasks[i].id === parseInt(taskId)) {
+        tasks[i].name = taskName;
+        tasks[i].type = taskType;
+      }
+    };
+
     alert("Task Updated!");
     formEl.removeAttribute("data-task-id");
     document.querySelector("#save-task").textContent = "Add Task";
@@ -159,6 +166,13 @@ var taskStatusChangeHandler = function (event) {
   } else if (statusValue === "completed") {
     tasksCompletedEl.appendChild(taskSelected);
   }
+  for (var i = 0; i < tasks.length; i++) {
+    if (tasks[i].id === parseInt(taskId)) {
+      tasks[i].status = statusValue;
+    }
+    console.log(tasks)
+  }
+
 };
 
 var editTask = function (taskId) {
@@ -187,6 +201,21 @@ var deleteTask = function (taskId) {
     ".task-item[data-task-id='" + taskId + "']"
   );
   taskSelected.remove();
+
+  // create new array to hold updated list of tasks
+  var updatedTaskArr = [];
+
+  // loop through current tasks
+  for (var i = 0; i < tasks.length; i++) {
+    // if tasks[i].id doesn't match the value of taskId, let's keep that task and push it into the new array
+    if (tasks[i].id !== parseInt(taskId)) {
+      updatedTaskArr.push(tasks[i]);
+    }
+  }
+
+  // reassign tasks array to be the same as updatedTaskArr
+  tasks = updatedTaskArr;
+
 };
 
 
