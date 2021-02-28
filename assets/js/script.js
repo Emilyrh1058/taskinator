@@ -67,8 +67,7 @@ var createTaskEl = function (taskDataObj) {
 
   tasks.push(taskDataObj);
 
-  localStorage.setItem("tasks", tasks);
-  
+  saveTasks();
 
   taskIdCounter++;
 };
@@ -230,12 +229,13 @@ var loadTasks = function() {
     return false;
   }
   console.log("Saved tasks found!");
-  // else, load up saved tasks
+  // ELSE, LOAD SAVED TASKS
 
-  // parse into array of objects
+  // PARSE INTO OBJECTS ARRAY
   savedTasks = JSON.parse(savedTasks);
+  console.log(saveTasks);
 
-  // loop through savedTasks array
+  // LOOP THROUGH savedTasks
   for (var i = 0; i < savedTasks.length; i++) {
     // pass each task object into the `createTaskEl()` function
     createTaskEl(savedTasks[i]);
