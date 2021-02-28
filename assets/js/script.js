@@ -227,7 +227,6 @@ var loadTasks = function() {
   var savedTasks = localStorage.getItem("tasks");
   // IF NO TASKS, SET TASKS TO AN EMPTY ARRAY, THEN RETURN OUT OF FUNCTION
   if (!savedTasks) {
-    tasks = []
     return false;
   }
   console.log("Saved tasks found!");
@@ -247,4 +246,4 @@ formEl.addEventListener("submit", taskFormHandler);
 pageContentEl.addEventListener("click", taskButtonHandler);
 pageContentEl.addEventListener("change", taskStatusChangeHandler);
 
-loadTasks()
+loadTasks();
